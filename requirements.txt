@@ -1,0 +1,8 @@
+azure-core
+azure-ai-evaluation
+azure-ai-inference
+azure-identity
+openai
+python-dotenv
+asyncio
+pandas

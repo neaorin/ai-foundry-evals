@@ -1,0 +1,7 @@
+[
+    {
+        "type": "azure-openai",
+        "azure-deployment": "gpt-4.1",
+        "azure-endpoint": "https://<endpoint>.openai.azure.com/"
+    }
+]
