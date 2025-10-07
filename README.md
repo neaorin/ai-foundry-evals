@@ -49,7 +49,7 @@ cd text-classification
 
 3. Open the `classify_model_endpoint.py` file and update the prompt as needed
 
-4. Open the `models.json` file and update as needed with the model deployments you want to evaluate
+4. Open the `models.json` file and update as needed with the model deployments you want to evaluate (see the **Evaluating different LLMs** section below for structure)
 
 5. Run your evaluations
 
@@ -58,4 +58,32 @@ python classify_evals.py
 ```
 
 6. After the evaluation run is over, you can examine the output in the [AI Foundry Portal](https://ai.azure.com/), in the Evaluation tab of your project.
+
+
+## Evaluating different LLMs 
+
+You can evaluate and compare multiple LLMs during the same evaluation run. The `models.json` file accepts an array of models, which can be either:
+
+- OpenAI proprietary models (gpt-5, gpt-4.1 etc) - use `"type": "azure-openai"`, authentication uses your Entra account and the endpoint is an Azure OpenAI endpoint (`https://<endpoint>.openai.azure.com/`)
+- Other models deployed in Azure AI Foundry (Llama, Mistral, DeepSeek, Phi etc) - use `"type": "azure-ai"`, authentication is made by key and the endpoint is an AI Foundry endpoint (`https://<endpoint>.services.ai.azure.com/models`)
+
+Example JSON file:
+
+```
+[
+    {
+        "type": "azure-openai",
+        "azure-deployment": "gpt-4.1",
+        "azure-endpoint": "https://<endpoint>.openai.azure.com/"
+    },
+    {
+        "type": "azure-ai",
+        "azure-endpoint": "https://<endpoint>.services.ai.azure.com/models",
+        "azure-deployment": "Phi-4",
+        "azure-key": "<key>"
+    }
+]
+```
+
+
 
