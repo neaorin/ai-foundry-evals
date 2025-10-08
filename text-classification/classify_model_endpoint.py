@@ -17,6 +17,7 @@ Răspunde cu un JSON de forma:
 {"categorie": "Impozit pe venit & contribuții sociale", "sumarizare": "Sumarizarea textului în maxim 20 de cuvinte"}
 
 Valoarea campului "categorie" trebuie să fie exact una dintre categoriile specificate, fără variații. 
+Răspunsul trebuie să fie un JSON valid, fără alte comentarii, fără markdown sau text adițional.
 """
 
 class ClassifyModelEndpoint:
@@ -42,42 +43,26 @@ class ClassifyModelEndpoint:
                 }
             ]
 
-        token_provider = get_bearer_token_provider(
-            DefaultAzureCredential(), "https://cognitiveservices.azure.com"
-        )
+        client: ChatCompletionsClient = None
 
         if self.env["type"] == "azure-openai":
-            client = AzureOpenAI(
-                azure_endpoint=self.env["azure-endpoint"],
-                api_version="2024-06-01",
-                azure_ad_token_provider=token_provider,
-            )
-            # Call the model
-            completion = client.chat.completions.create(
-                model=self.env["azure-deployment"],
-                messages=messages,
-                max_tokens=250,
-                temperature=0.0,
-                frequency_penalty=0,
-                presence_penalty=0,
-                stop=None,
-                stream=False,
-            )
-            output = completion.to_dict()
-            return {"query": query, "response": output["choices"][0]["message"]["content"]}
+            client = ChatCompletionsClient(endpoint=f'{self.env["azure-endpoint"]}/openai/deployments/{self.env["azure-deployment"]}', 
+                                           credential=DefaultAzureCredential(),
+                                           credential_scopes=["https://cognitiveservices.azure.com/.default"],
+                                           api_version="2024-06-01")
 
         elif self.env["type"] == "azure-ai":
-            client = ChatCompletionsClient(endpoint=self.env["azure-endpoint"], 
-                                           credential=AzureKeyCredential(self.env["azure-key"]),
-                                           api_version="2024-05-01-preview")
+            client = ChatCompletionsClient(endpoint=f'{self.env["azure-endpoint"]}/models', 
+                                           credential=DefaultAzureCredential(),
+                                           credential_scopes=["https://ai.azure.com/.default"],)
 
-            completion = client.complete(
-                model=self.env["azure-deployment"],
-                messages=messages,
-                max_tokens=250,
-                temperature=0.0,
-                frequency_penalty=0,
-                presence_penalty=0,
-            )
+        completion = client.complete(
+            model=self.env["azure-deployment"],
+            messages=messages,
+            max_tokens=250,
+            temperature=0.0,
+            frequency_penalty=0,
+            presence_penalty=0,
+        )
 
-            return {"query": query, "response": completion.choices[0].message.content}
+        return {"query": query, "response": completion.choices[0].message.content}

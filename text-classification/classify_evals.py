@@ -22,6 +22,9 @@ class ClassifierEvaluator():
     ): 
         if not response or not ground_truth:
             return 0
+        # some models (Phi-4 etc) return markdown formatting, so we need to clean that up
+        response = response.strip().replace("```json", "").replace("```", "").replace("```json\n", "").replace("```json\r\n", "")
+
         # read response as JSON and take the category field
         response_json = json.loads(response)
         response_category = response_json.get("categorie", "").strip().lower()

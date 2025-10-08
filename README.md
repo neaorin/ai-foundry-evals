@@ -65,7 +65,7 @@ python classify_evals.py
 You can evaluate and compare multiple LLMs during the same evaluation run. The `models.json` file accepts an array of models, which can be either:
 
 - OpenAI proprietary models (gpt-5, gpt-4.1 etc) - use `"type": "azure-openai"`, authentication uses your Entra account and the endpoint is an Azure OpenAI endpoint (`https://<endpoint>.openai.azure.com/`)
-- Other models deployed in Azure AI Foundry (Llama, Mistral, DeepSeek, Phi etc) - use `"type": "azure-ai"`, authentication is made by key and the endpoint is an AI Foundry endpoint (`https://<endpoint>.services.ai.azure.com/models`)
+- Other models deployed in Azure AI Foundry (Llama, Mistral, DeepSeek, Phi etc) - use `"type": "azure-ai"`, authentication uses your Entra account and the endpoint is an AI Foundry endpoint (`https://<endpoint>.services.ai.azure.com/`)
 
 Example JSON file:
 
@@ -78,9 +78,8 @@ Example JSON file:
     },
     {
         "type": "azure-ai",
-        "azure-endpoint": "https://<endpoint>.services.ai.azure.com/models",
         "azure-deployment": "Phi-4",
-        "azure-key": "<key>"
+        "azure-endpoint": "https://<endpoint>.services.ai.azure.com/"
     }
 ]
 ```
