@@ -36,11 +36,7 @@ class ClassifierEvaluator():
         else:
             return 0
 
-azure_ai_project = AzureAIProject(
-    subscription_id=os.getenv("AZURE_SUBSCRIPTION_ID"),
-    resource_group_name=os.getenv("AZURE_RESOURCE_GROUP_NAME"),
-    project_name=os.getenv("AZURE_PROJECT_NAME"),
-)
+azure_ai_foundry_project_endpoint = os.getenv("AZURE_AI_FOUNDRY_PROJECT_ENDPOINT")
 
 # create temp folder if it doesn't exist
 if not os.path.exists("temp"):
@@ -69,7 +65,7 @@ for model in models:
         evaluation_name=eval_prefix + " - " + model['azure-deployment'],
         data=path,
         target=ClassifyModelEndpoint(model),
-        azure_ai_project=azure_ai_project,
+        azure_ai_project=azure_ai_foundry_project_endpoint,
         evaluators={
             "classification_accuracy": ClassifierEvaluator(),
         },
