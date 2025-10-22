@@ -2,7 +2,13 @@ azure-core
 azure-ai-evaluation
 azure-ai-inference
 azure-identity
+azure-search-documents
 openai
 python-dotenv
 asyncio
 pandas
+langchain
+langchain-openai
+langchain-community
+langchain-text-splitters
+pypdf

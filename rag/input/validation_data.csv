@@ -1,0 +1,4 @@
+id,query,ground_truth
+000001,"La ce sumă a ajuns profitul net al băncii?","Profitul net al Grupului Banca Transilvania a ajuns, la finalul lunii iunie 2025, la 1,97 miliarde lei"
+000002,"Câți clienți are Banca Transilvania?","Banca și-a mărit baza de clienți - inclusiv prin fuziunea cu OTP Bank România - și a ajuns la 4,84 milioane de clienți persoane fizice și companii, la 30 iunie 2025"
+000003,"Care este valoarea activelor totale ale băncii?","Activele Grupului Financiar Banca Transilvania au crescut până la 208,2 miliarde lei (+0,5% faţă de 31 decembrie 2024 și +17% față de 30 iunie 2024)"

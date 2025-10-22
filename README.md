@@ -35,6 +35,46 @@ pip install -r requirements.txt
 az login
 ```
 
+## Evaluation of AI quality for Retrieval Augmented Generation (RAG) chatbots
+
+This example shows how you can evaluate a RAG chatbot based on [AI quality metrics](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/evaluation-evaluators/rag-evaluators) like Groundedness, Similarity, Fluency etc. It also allows evaluation for [Risk & Safety metrics](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/evaluation-evaluators/risk-safety-evaluators) like Hate and unfairness, Self-harm, Sexual, and Violence.
+
+1. Go to the `rag` folder
+
+```
+cd rag
+```
+
+2. Update the `input/validation_data.csv` file with your validation dataset
+
+3. Open the `rag_model_endpoint.py` file and update the prompt as needed
+
+4. Open the `models.json` file and update as needed with the model deployments you want to evaluate (see the **Evaluating different LLMs** section below for structure)
+
+5. Upload your PDF documents to the `input/kb` folder
+
+6. Build your vector index in Azure AI Search: 
+
+```
+python azure-ai-search-build-index.py
+```
+
+7. Compile your validation dataset including the context from vector search:
+
+```
+python azure-ai-search-retrieve-context.py
+```
+
+After this step, a new file `temp/validation_data_with_context.csv` should have been created.
+
+8. Run your evaluations
+
+```
+python ai_quality_evals.py
+```
+
+9. After the evaluation run is over, you can examine the output in the [AI Foundry Portal](https://ai.azure.com/), in the Evaluation tab of your project.
+
 ## Evaluation AI text classification
 
 This example shows how you can evaluate a text classifier that picks the appropriate category for a natural language text input.
