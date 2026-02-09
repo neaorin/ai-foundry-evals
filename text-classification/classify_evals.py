@@ -7,8 +7,6 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 from classify_model_endpoint import ClassifyModelEndpoint
-from azure.ai.evaluation import AzureAIProject 
-
 # Load environment variables from .env file
 load_dotenv('../.env')
 
@@ -36,7 +34,17 @@ class ClassifierEvaluator():
         else:
             return 0
 
-azure_ai_foundry_project_endpoint = os.getenv("AZURE_AI_FOUNDRY_PROJECT_ENDPOINT")
+azure_ai_project = {
+    "subscription_id": os.getenv("AZURE_SUBSCRIPTION_ID"),
+    "resource_group_name": os.getenv("AZURE_RESOURCE_GROUP_NAME"),
+    "project_name": os.getenv("AZURE_AI_FOUNDRY_PROJECT_NAME"),
+}
+
+# Validate required environment variables
+required_vars = ["AZURE_SUBSCRIPTION_ID", "AZURE_RESOURCE_GROUP_NAME", "AZURE_AI_FOUNDRY_PROJECT_NAME"]
+missing_vars = [var for var in required_vars if not os.getenv(var)]
+if missing_vars:
+    raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
 
 # create temp folder if it doesn't exist
 if not os.path.exists("temp"):
@@ -65,7 +73,7 @@ for model in models:
         evaluation_name=eval_prefix + " - " + model['azure-deployment'],
         data=path,
         target=ClassifyModelEndpoint(model),
-        azure_ai_project=azure_ai_foundry_project_endpoint,
+        azure_ai_project=azure_ai_project,
         evaluators={
             "classification_accuracy": ClassifierEvaluator(),
         },
