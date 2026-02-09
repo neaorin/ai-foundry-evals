@@ -18,6 +18,12 @@ azure_ai_project = {
     "project_name": os.getenv("AZURE_AI_FOUNDRY_PROJECT_NAME"),
 }
 
+# Validate required environment variables
+required_vars = ["AZURE_SUBSCRIPTION_ID", "AZURE_RESOURCE_GROUP_NAME", "AZURE_AI_FOUNDRY_PROJECT_NAME"]
+missing_vars = [var for var in required_vars if not os.getenv(var)]
+if missing_vars:
+    raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
+
 evaluator_model_config = {
     "azure_endpoint": os.getenv("EVALUATOR_AZURE_OPENAI_ENDPOINT"),
     "azure_deployment": os.getenv("EVALUATOR_AZURE_OPENAI_DEPLOYMENT"),
