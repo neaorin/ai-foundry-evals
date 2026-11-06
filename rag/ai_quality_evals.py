@@ -11,7 +11,18 @@ from rag_model_endpoint import RAGModelEndpoint
 
 # Load environment variables from .env file
 load_dotenv('../.env')  # take environment variables from .env file
-azure_ai_foundry_project_endpoint = os.getenv("AZURE_AI_FOUNDRY_PROJECT_ENDPOINT")
+
+azure_ai_project = {
+    "subscription_id": os.getenv("AZURE_SUBSCRIPTION_ID"),
+    "resource_group_name": os.getenv("AZURE_RESOURCE_GROUP_NAME"),
+    "project_name": os.getenv("AZURE_AI_FOUNDRY_PROJECT_NAME"),
+}
+
+# Validate required environment variables
+required_vars = ["AZURE_SUBSCRIPTION_ID", "AZURE_RESOURCE_GROUP_NAME", "AZURE_AI_FOUNDRY_PROJECT_NAME"]
+missing_vars = [var for var in required_vars if not os.getenv(var)]
+if missing_vars:
+    raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
 
 evaluator_model_config = {
     "azure_endpoint": os.getenv("EVALUATOR_AZURE_OPENAI_ENDPOINT"),
@@ -43,7 +54,7 @@ from azure.ai.evaluation import (
 
 
 content_safety_evaluator = ContentSafetyEvaluator(
-    azure_ai_project=azure_ai_foundry_project_endpoint, credential=DefaultAzureCredential()
+    azure_ai_project=azure_ai_project, credential=DefaultAzureCredential()
 )
 relevance_evaluator = RelevanceEvaluator(evaluator_model_config)
 coherence_evaluator = CoherenceEvaluator(evaluator_model_config)
@@ -65,7 +76,7 @@ for model in models:
         evaluation_name=eval_prefix + " - " + model['azure-deployment'],
         data=path,
         target=RAGModelEndpoint(model),
-        azure_ai_project=azure_ai_foundry_project_endpoint,
+        azure_ai_project=azure_ai_project,
         evaluators={
             "content_safety": content_safety_evaluator,
             "coherence": coherence_evaluator,
